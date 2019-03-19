@@ -1,0 +1,7 @@
+entity_history_api_show:
+    path:     /entity-history/api
+    defaults: { _controller: EntityHistoryBundle:History:apiShow }
+
+entity_history_show:
+    path:     /entity-history/show
+    defaults: { _controller: EntityHistoryBundle:History:show }
