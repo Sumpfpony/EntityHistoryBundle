@@ -30,7 +30,6 @@ class DoctrineAdapter implements StoreAdapterInterface
     protected $entityManager;
 
 
-
     public function __construct(TokenStorageInterface $tokenStorage)
     {
         $this->tokenStorage = $tokenStorage;
@@ -55,8 +54,8 @@ class DoctrineAdapter implements StoreAdapterInterface
     {
 
         $reflect = new \ReflectionClass($entity);
-        if(!$reflect->implementsInterface(LogInterface::class))
-            throw new \Exception('can not set Log entity: the target class "'.$entity.'" does not implement '.LogInterface::class);
+        if (!$reflect->implementsInterface(LogInterface::class))
+            throw new \Exception('can not set Log entity: the target class "' . $entity . '" does not implement ' . LogInterface::class);
 
         $this->entity = $entity;
     }
@@ -72,27 +71,27 @@ class DoctrineAdapter implements StoreAdapterInterface
     public function createLog($className, $id, $changeSet)
     {
 
-        if(is_null($this->entity))
+        if (is_null($this->entity))
             throw new \Exception('can not create log because no target class is defined');
 
         /**
          * @var LogInterface $log
          */
 
-            $reflect = new \ReflectionClass($this->entity);
-            $log = $reflect->newInstance();
+        $reflect = new \ReflectionClass($this->entity);
+        $log = $reflect->newInstance();
 
-            $log
-                ->setClassId($id)
-                ->setClassName($className)
-                ->setChangeSet($changeSet)
-                ->setDateTime(new \DateTime())
-                ->setUser($this->getUser());
+        $log
+            ->setClassId($id)
+            ->setClassName($className)
+            ->setChangeSet($changeSet)
+            ->setDateTime(new \DateTime())
+            ->setUser($this->getUser());
 
-            $this->entityManager->persist($log);
-            //$this->entityManager->getUnitOfWork()->computeChangeSet($this->entityManager->getClassMetadata($this->entity), $log);
+        $this->entityManager->persist($log);
+        //$this->entityManager->getUnitOfWork()->computeChangeSet($this->entityManager->getClassMetadata($this->entity), $log);
 
-            $this->entityManager->flush();
+        $this->entityManager->flush();
 
 
     }
@@ -101,15 +100,16 @@ class DoctrineAdapter implements StoreAdapterInterface
     /**
      * @param string $className
      * @param int $id
+     * @param int $limit
+     * @param null $offset
      * @return LogInterface[]
      * @throws \Exception
      */
-    public function getHistories($className, $id)
+    public function getHistories($className, $id, $limit = 30, $offset = null)
     {
 
-        if($manager = $this->getEntityManager())
-        {
-            return $manager->getRepository($this->entity)->findBy(['classId' => $id, 'className' => $className]);
+        if ($manager = $this->getEntityManager()) {
+            return $manager->getRepository($this->entity)->findBy(['classId' => $id, 'className' => $className], null, $limit, $offset);
         } else {
             throw new \Exception('entitymanager misssing');
         }
@@ -121,7 +121,7 @@ class DoctrineAdapter implements StoreAdapterInterface
      */
     public function getUser(): string
     {
-        if($this->user)
+        if ($this->user)
             return $this->user;
 
         return ($this->tokenStorage->getToken()) ? $this->tokenStorage->getToken()->getUsername() : 'system';

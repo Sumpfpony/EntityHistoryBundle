@@ -35,9 +35,11 @@ class HistoryController extends Controller
     {
         $className = $request->get('className');
         $classId = $request->get('classId');
+        $limit = $request->get('limit');
+        $offset = $request->get('offset', null);
 
-        $histories = ($className && (int)$classId > 0) ? $this->storeAdapter->getHistories($className, $classId) : [];
-        $historiesArray = array_map(function(BaseLog $baseLog){
+        $histories = ($className && (int)$classId > 0) ? $this->storeAdapter->getHistories($className, $classId, $limit, $offset) : [];
+        $historiesArray = array_map(function (BaseLog $baseLog) {
             return [
                 'classId' => $baseLog->getClassId(),
                 'className' => $baseLog->getClassName(),
@@ -45,7 +47,7 @@ class HistoryController extends Controller
                 'changeSet' => $baseLog->getChangeSet(),
                 'dateTime' => $baseLog->getDateTime(),
             ];
-        },$histories);
+        }, $histories);
         return new JsonResponse($historiesArray);
     }
 
@@ -58,8 +60,10 @@ class HistoryController extends Controller
     {
         $className = $request->get('className');
         $classId = $request->get('classId');
+        $limit = $request->get('limit');
+        $offset = $request->get('offset', null);
 
-        $logs = ($className && (int)$classId > 0) ? $this->storeAdapter->getHistories($className, $classId) : [];
+        $logs = ($className && (int)$classId > 0) ? $this->storeAdapter->getHistories($className, $classId, $limit, $offset) : [];
 
         $dumper = new Dumper();
 

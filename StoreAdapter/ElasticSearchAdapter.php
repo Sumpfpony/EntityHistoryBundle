@@ -100,14 +100,17 @@ class ElasticSearchAdapter implements StoreAdapterInterface
     /**
      * @param string $className
      * @param int $id
+     * @param int $limit
+     * @param null $offset
      * @return array|\Sumpfpony\EntityHistoryBundle\Model\LogInterface[]
+     * @throws \Exception
      */
-    public function getHistories($className, $id)
+    public function getHistories($className, $id, $limit = 30, $offset = null)
     {
         $elasticResult = $this->getClient()->search([
             'index' => $this->index,
             'type' => $this->type,
-            //'size' => 0,
+            'size' => $limit,
             'body' => [
                 'query' => [
                     "bool" => [

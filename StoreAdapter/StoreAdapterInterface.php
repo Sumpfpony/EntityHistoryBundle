@@ -34,7 +34,9 @@ interface StoreAdapterInterface
     /**
      * @param string $className
      * @param int $classId
+     * @param int $limit
+     * @param null $offset
      * @return LogInterface[]
      */
-    public function getHistories($className, $classId);
+    public function getHistories($className, $classId, $limit = 30, $offset = null);
 }

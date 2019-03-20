@@ -70,10 +70,12 @@ class MonologStoreAdapter implements StoreAdapterInterface
      *
      * @param string $className
      * @param int $id
+     * @param int $limit
+     * @param null $offset
      *
      * @return array
      */
-    public function getHistories($className, $id)
+    public function getHistories($className, $id, $limit = 30, $offset = null)
     {
         return [];
     }
