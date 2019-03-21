@@ -109,9 +109,9 @@ class DoctrineAdapter implements StoreAdapterInterface
     {
 
         if ($manager = $this->getEntityManager()) {
-            return $manager->getRepository($this->entity)->findBy(['classId' => $id, 'className' => $className], null, $limit, $offset);
+            return $manager->getRepository($this->entity)->findBy(['classId' => $id, 'className' => $className], ['dateTime' => 'DESC'], $limit, $offset);
         } else {
-            throw new \Exception('entitymanager misssing');
+            throw new \Exception('EntityManager missing');
         }
 
     }
