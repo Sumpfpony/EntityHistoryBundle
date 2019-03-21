@@ -45,9 +45,10 @@ class HistoryController extends Controller
                 'className' => $baseLog->getClassName(),
                 'user' => $baseLog->getUser(),
                 'changeSet' => $baseLog->getChangeSet(),
-                'dateTime' => $baseLog->getDateTime(),
+                'dateTime' => $baseLog->getDateTime()->format('c'),
             ];
         }, $histories);
+
         return new JsonResponse($historiesArray);
     }
 
