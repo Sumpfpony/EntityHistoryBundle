@@ -9,6 +9,7 @@
 namespace Sumpfpony\EntityHistoryBundle\StoreAdapter;
 
 use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\EntityManagerInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
 
@@ -27,7 +28,7 @@ class MonologStoreAdapter implements StoreAdapterInterface
 
     protected $manager;
 
-    public function __construct(LoggerInterface $logger, TokenStorageInterface $tokenStorage, EntityManager $manager)
+    public function __construct(LoggerInterface $logger, TokenStorageInterface $tokenStorage, EntityManagerInterface $manager)
     {
         $this->manager = $manager;
         $this->logger = $logger;
