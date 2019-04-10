@@ -45,7 +45,7 @@ class HistoryController extends Controller
                 'className' => $baseLog->getClassName(),
                 'user' => $baseLog->getUser(),
                 'changeSet' => $baseLog->getChangeSet(),
-                'dateTime' => $baseLog->getDateTime()->format('c'),
+                'dateTime' => $baseLog->getDateTime()->format(\DateTime::ATOM),
             ];
         }, $histories);
 
