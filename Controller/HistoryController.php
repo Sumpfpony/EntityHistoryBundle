@@ -37,14 +37,17 @@ class HistoryController extends Controller
         $classId = $request->get('classId');
         $limit = $request->get('limit');
         $offset = $request->get('offset', null);
+        $castObjects = $request->get('cast_objects', false);
 
         $histories = ($className && (int)$classId > 0) ? $this->storeAdapter->getHistories($className, $classId, $limit, $offset) : [];
-        $historiesArray = array_map(function (BaseLog $baseLog) {
+        $historiesArray = array_map(function (BaseLog $baseLog) use ($castObjects) {
             return [
                 'classId' => $baseLog->getClassId(),
                 'className' => $baseLog->getClassName(),
                 'user' => $baseLog->getUser(),
-                'changeSet' => $baseLog->getChangeSet(),
+                'changeSet' => $castObjects ? array_map([$this, 'dump'], $baseLog->getChangeSet()) : $baseLog->getChangeSet(), /*array_map(function($values) {
+                    return array_map([$this, 'dump'], $values);
+                }, $baseLog->getChangeSet()),*/
                 'dateTime' => $baseLog->getDateTime()->format(\DateTime::ATOM),
             ];
         }, $histories);
@@ -74,4 +77,28 @@ class HistoryController extends Controller
                 'dumper' => $dumper
             ]);
     }
+
+
+    /**
+     * @param $var
+     * @return string
+     */
+    protected function dump($var)
+    {
+
+        $value = '';
+
+        if(is_object($var))
+            $value = (string) $var;
+
+        elseif (is_array($var))
+            $value = array_map([$this, 'dump'], $var);
+
+        else
+            $value = $var;
+
+        return $value;
+    }
+
+
 }
